@@ -43,11 +43,13 @@ void Network<Gang1Type, Gang2Type>::tick( void )
   _delay.tick( _rec, _tickno );
 }
 
+// time complexity: O(n)
 template <class Gang1Type, class Gang2Type>
 void Network<Gang1Type, Gang2Type>::run_simulation( const double & duration )
 {
   assert( _tickno == 0 );
 
+  // obviously, the time complexity of the algorithm is in linear time
   while ( _tickno < duration ) {
     /* find element with soonest event */
     _tickno = min( min( _senders.next_event_time( _tickno ),

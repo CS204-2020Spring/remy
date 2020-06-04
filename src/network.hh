@@ -77,7 +77,9 @@ template <class Gang1Type, class Gang2Type>
 class Network
 {
 private:
+  // pseudo-random number generator
   PRNG & _prng;
+  // why there are only two sets of switches?
   SenderGangofGangs<Gang1Type, Gang2Type> _senders;
   Link _link;
   Delay _delay;

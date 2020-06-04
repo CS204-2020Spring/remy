@@ -21,6 +21,7 @@ public:
 	const unsigned int s_limit )
     : _buffer(), _pending_packet( 1.0 / s_rate ), _limit( s_limit ) {}
 
+  // accept the packet p at the given timestamp tickno
   void accept( const Packet & p, const double & tickno ) noexcept {
     if ( _pending_packet.empty() ) {
       _pending_packet.accept( p, tickno );

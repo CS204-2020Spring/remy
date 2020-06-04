@@ -41,6 +41,7 @@ void SenderGang<SenderType, SwitcherType>::switch_senders( const unsigned int nu
   }
 }
 
+// just like a reduce function to count the # of on switches
 template <class SenderType, class SwitcherType>
 unsigned int SenderGang<SenderType, SwitcherType>::count_active_senders( void ) const
 {

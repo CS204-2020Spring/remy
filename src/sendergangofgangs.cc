@@ -14,6 +14,7 @@ SenderGangofGangs<Gang1Type, Gang2Type>::SenderGangofGangs( const Gang1Type & ga
   assert( gang2_.count_senders() == 0 or gang2_.id_of_first_sender() == gang1_.count_senders() );
 }
 
+// count the # of active senders
 template <class Gang1Type, class Gang2Type>
 unsigned int SenderGangofGangs<Gang1Type, Gang2Type>::count_active_senders( void ) const
 {
