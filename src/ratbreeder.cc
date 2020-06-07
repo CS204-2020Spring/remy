@@ -1,11 +1,15 @@
 #include <iostream>
 
 #include "ratbreeder.hh"
+#include <cstdlib>
+#include <algorithm>
 
 using namespace std;
 extern double action_reward_E_array[];
 extern int action_count_array[];
 const int action_array_size = 13;
+const double action_epsilon = 0.1;
+extern double last_action_score;
 Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
 {
   /* back up the original whiskertree */
@@ -16,11 +20,17 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
   whiskers.reset_generation();
   unsigned int generation = 0;
   unsigned int generation_chosen = 5;
-  for(int i = 5; i < action_array_size; i++){
+  for(int i = 3; i < action_array_size; i++){
     if(action_reward_E_array[i] > action_reward_E_array[generation_chosen]){
       generation_chosen = i;
     }
   }
+  int random_num = rand()%10;
+  if((double)random_num <= action_epsilon * 10){
+    //random chosen generation
+    generation_chosen = (rand() %(action_array_size-3))+3;
+  }
+  fprintf(stderr," generation chosen: %f\n", (double)generation_chosen);
   
 
 
@@ -59,6 +69,7 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
     }
 
     whisker_to_improve.demote( generation + 1 );
+    //fprintf(stderr," new score %f, old score %f \n", score_to_beat, outcome.score);
 
     const auto result __attribute((unused)) = whiskers.replace( whisker_to_improve );
     assert( result );
@@ -75,10 +86,13 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
 
   // the score should be very very small
   // reward in this step is (new_score - old_score.score)
-  double reward_this_step = new_score.score - old_score.score;
+  //double reward_this_step = new_score.score - old_score.score;
+  double reward_this_step = max(old_score.score, new_score.score) - last_action_score;
+  fprintf(stderr," last_action_score: %f, this time : %f \n", last_action_score, max(old_score.score, new_score.score) );
   action_reward_E_array[generation_chosen] = ((action_reward_E_array[generation_chosen]*action_count_array[generation_chosen]) + reward_this_step ) / (action_count_array[generation_chosen]+1);
   action_count_array[generation_chosen] ++;
-  fprintf(stderr,"generation_chosen %f, new score %f, old score %f \n",(double)generation_chosen,new_score.score,  old_score.score);
+  //fprintf(stderr,"new score %f, old score %f \n",new_score.score,  old_score.score);
+  last_action_score = max(old_score.score, new_score.score);
 
   if ( old_score.score >= new_score.score ) {
     fprintf( stderr, "Regression, old=%f, new=%f\n", old_score.score, new_score.score );

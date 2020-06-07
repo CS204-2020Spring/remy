@@ -14,8 +14,10 @@ using namespace std;
 const int action_array_size = 13;
 double action_reward_E_array[action_array_size];
 int action_count_array[action_array_size];
+double last_action_score = 0;
 
 void init_action_array(){
+  last_action_score = 0;
   for( int i = 0; i < action_array_size; i++){
   	action_reward_E_array[i] = 0 ;
   	action_count_array[i] = 0;
@@ -142,7 +144,7 @@ int main( int argc, char *argv[] )
   bool written = false;
 
   while ( 1 ) {
-  	init_action_array();
+  	
     auto outcome = breeder.improve( whiskers );
     printf( "run = %u, score = %f\n", run, outcome.score );
 
