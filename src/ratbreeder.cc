@@ -5,7 +5,7 @@
 using namespace std;
 extern double action_reward_E_array[];
 extern int action_count_array[];
-extern const int action_array_size;
+const int action_array_size = 13;
 Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
 {
   /* back up the original whiskertree */
@@ -15,8 +15,8 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
   /* evaluate the whiskers we have */
   whiskers.reset_generation();
   unsigned int generation = 0;
-  unsigned int generation_chosen = 3;
-  for(int i = 3; i < action_array_size; i++){
+  unsigned int generation_chosen = 5;
+  for(int i = 5; i < action_array_size; i++){
     if(action_reward_E_array[i] > action_reward_E_array[generation_chosen]){
       generation_chosen = i;
     }
@@ -78,7 +78,7 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
   double reward_this_step = new_score.score - old_score.score;
   action_reward_E_array[generation_chosen] = ((action_reward_E_array[generation_chosen]*action_count_array[generation_chosen]) + reward_this_step ) / (action_count_array[generation_chosen]+1);
   action_count_array[generation_chosen] ++;
-  printf("new score %f, old score %f \n",new_score.score,  old_score.score)
+  fprintf(stderr,"generation_chosen %f, new score %f, old score %f \n",(double)generation_chosen,new_score.score,  old_score.score);
 
   if ( old_score.score >= new_score.score ) {
     fprintf( stderr, "Regression, old=%f, new=%f\n", old_score.score, new_score.score );
