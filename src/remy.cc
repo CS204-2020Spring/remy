@@ -11,6 +11,17 @@
 #include "configrange.hh"
 using namespace std;
 
+const int action_array_size = 13;
+double action_reward_E_array[action_array_size];
+int action_count_array[action_array_size];
+
+void init_action_array(){
+  for( int i = 0; i < action_array_size; i++){
+  	action_reward_E_array[i] = 0 ;
+  	action_count_array[i] = 0;
+  }
+}
+
 void print_range( const Range & range, const string & name )
 {
   printf( "Optimizing for %s over [%f : %f : %f]\n", name.c_str(),
@@ -26,6 +37,8 @@ int main( int argc, char *argv[] )
   RemyBuffers::ConfigRange input_config;
   string config_filename;
 
+
+  init_action_array();
   for ( int i = 1; i < argc; i++ ) {
     string arg( argv[ i ] );
     if ( arg.substr( 0, 3 ) == "if=" ) {
@@ -129,6 +142,7 @@ int main( int argc, char *argv[] )
   bool written = false;
 
   while ( 1 ) {
+  	init_action_array();
     auto outcome = breeder.improve( whiskers );
     printf( "run = %u, score = %f\n", run, outcome.score );
 
@@ -146,7 +160,7 @@ int main( int argc, char *argv[] )
       }
       printf( "===\nconfig: %s\n", run.first.str().c_str() );
       for ( auto &x : run.second ) {
-	printf( "sender: [tp=%f, del=%f]\n", x.first / run.first.link_ppt, x.second / run.first.delay );
+	   printf( "sender: [tp=%f, del=%f]\n", x.first / run.first.link_ppt, x.second / run.first.delay );
       }
     }
 
