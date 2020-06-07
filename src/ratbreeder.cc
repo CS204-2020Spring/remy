@@ -25,9 +25,11 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
       generation_chosen = i;
     }
   }
+  fprintf(stderr,"-----------------------------------------------\n-------------------------------------\n");
   int random_num = rand()%10;
   if((double)random_num <= action_epsilon * 10){
     //random chosen generation
+    fprintf(stderr,"random step\n");
     generation_chosen = (rand() %(action_array_size-3))+3;
   }
   fprintf(stderr," generation chosen: %f\n", (double)generation_chosen);
@@ -89,8 +91,12 @@ Evaluator< WhiskerTree >::Outcome RatBreeder::improve( WhiskerTree & whiskers )
   //double reward_this_step = new_score.score - old_score.score;
   double reward_this_step = max(old_score.score, new_score.score) - last_action_score;
   fprintf(stderr," last_action_score: %f, this time : %f \n", last_action_score, max(old_score.score, new_score.score) );
+  fprintf(stderr," reward_this_step: %f \n", reward_this_step );
+
   action_reward_E_array[generation_chosen] = ((action_reward_E_array[generation_chosen]*action_count_array[generation_chosen]) + reward_this_step ) / (action_count_array[generation_chosen]+1);
+  
   action_count_array[generation_chosen] ++;
+  fprintf(stderr," new reward: %f, now total cound %f\n", action_reward_E_array[generation_chosen], (double)action_count_array[generation_chosen]);
   //fprintf(stderr,"new score %f, old score %f \n",new_score.score,  old_score.score);
   last_action_score = max(old_score.score, new_score.score);
 
